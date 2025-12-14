@@ -128,10 +128,11 @@ Your deployment must:
 - Mount configmap files at `/supervisor.yaml` and `/collector.yaml`
 - Mount `/storage` as emptyDir
 - Use the built image
+- kubectl apply -f opamp-agent-deploy.yaml
 
 #### Yaml File
 ```
-  apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: opamp-agent
