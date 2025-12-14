@@ -129,7 +129,8 @@ Your deployment must:
 - Mount `/storage` as emptyDir
 - Use the built image
 
-  ```
+#### Yaml File
+```
   apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -166,7 +167,6 @@ spec:
             name: opamp-agent-config
         - name: storage
           emptyDir: {}
-
 ```
 
 ## Step 5: Rollout / Update Workflow (Repeatable)
