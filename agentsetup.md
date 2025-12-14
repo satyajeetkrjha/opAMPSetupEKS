@@ -169,6 +169,72 @@ spec:
         - name: storage
           emptyDir: {}
 ```
+### Agent as Daemonset as this is what objective is 
+
+```
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: opamp-agent
+  namespace: opamp
+spec:
+  selector:
+    matchLabels:
+      app: opamp-agent
+  template:
+    metadata:
+      labels:
+        app: opamp-agent
+    spec:
+      tolerations:
+      - operator: Exists
+
+      containers:
+      - name: agent
+        image: 868850538410.dkr.ecr.us-east-1.amazonaws.com/opamp-agent:v0.1
+        imagePullPolicy: Always
+
+        # node identity (important once you scale)
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: K8S_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+
+        volumeMounts:
+        - name: cfg
+          mountPath: /supervisor.yaml
+          subPath: supervisor.yaml
+        - name: cfg
+          mountPath: /collector.yaml
+          subPath: collector.yaml
+        - name: storage
+          mountPath: /storage
+
+      volumes:
+      - name: cfg
+        configMap:
+          name: opamp-agent-config
+      - name: storage
+        emptyDir: {}
+```
+
+```
+kubectl -n opamp delete deployment opamp-agent
+
+kubectl -n opamp apply -f opamp-agent-daemonset.yaml
+
+kubectl -n opamp rollout status ds/opamp-agent --timeout=180s
+kubectl -n opamp get pods -n opamp -l app=opamp-agent -o wide
+```
 
 ## Step 5: Rollout / Update Workflow (Repeatable)
 
