@@ -129,6 +129,46 @@ Your deployment must:
 - Mount `/storage` as emptyDir
 - Use the built image
 
+  ```
+  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opamp-agent
+  namespace: opamp
+  labels:
+    app: opamp-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opamp-agent
+  template:
+    metadata:
+      labels:
+        app: opamp-agent
+    spec:
+      containers:
+        - name: agent
+          image: 868850538410.dkr.ecr.us-east-1.amazonaws.com/opamp-agent:v0.1
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: cfg
+              mountPath: /supervisor.yaml
+              subPath: supervisor.yaml
+            - name: cfg
+              mountPath: /collector.yaml
+              subPath: collector.yaml
+            - name: storage
+              mountPath: /storage
+      volumes:
+        - name: cfg
+          configMap:
+            name: opamp-agent-config
+        - name: storage
+          emptyDir: {}
+
+```
+
 ## Step 5: Rollout / Update Workflow (Repeatable)
 
 This is the official workflow you should always use.
