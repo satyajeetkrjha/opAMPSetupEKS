@@ -151,7 +151,7 @@ spec:
     spec:
       containers:
         - name: agent
-          image: 868850538410.dkr.ecr.us-east-1.amazonaws.com/opamp-agent:v0.1
+          image: <awsaccount>.dkr.ecr.us-east-1.amazonaws.com/opamp-agent:v0.1
           imagePullPolicy: Always
           volumeMounts:
             - name: cfg
@@ -191,7 +191,7 @@ spec:
 
       containers:
       - name: agent
-        image: 868850538410.dkr.ecr.us-east-1.amazonaws.com/opamp-agent:v0.1
+        image: <awsaccount>.dkr.ecr.us-east-1.amazonaws.com/opamp-agent:v0.1
         imagePullPolicy: Always
 
         # node identity (important once you scale)
